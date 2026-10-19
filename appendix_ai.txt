@@ -1,0 +1,9 @@
+Appendix: AI use declaration (DSE1101 group project)
+
+Format, one entry per conversation:
+[Member] [Date] [Tool] <public link>
+  One-line description of what it was used for.
+
+If a public link isn't possible, paste the prompt(s) and response(s) below the entry.
+
+----------------------------------------------------------------
