@@ -2,7 +2,7 @@
 # Owner: A   Tasks: A1-A4 (Week 10)
 # Creates the cleaned data and the train/test split that every later script uses.
 # Details: Week10_tasks_explained.md
-gccvuvjhg()
+
 
 # A1. Import data
 # Read data/HDB_data_2021_sample.xlsx (relative path, not /Users/...)
