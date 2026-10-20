@@ -8,3 +8,5 @@
 # B5. Amenities test (core + amenity block), compare CV RMSE
 
 # B6. Cluster label in place of town dummies (needs 05_clustering.R output)
+library(readxl)
+HDB_data = read_excel("data/HDB_data_2021_sample.xlsx")
