@@ -36,9 +36,9 @@ ggplot(HDB_data, aes(x = resale_price)) + geom_histogram(bins = 50)
 ## plot is right-skewed for histogram which represents higher end expensive flats
 ggplot(HDB_data, aes(y = resale_price)) + geom_boxplot() + labs(y = 'Resale price in $000s')
 ## 6 variables picked based on perceived importance 
-vars <- c("resale_price", "floor_area_sqm", "Remaining_lease",
+impt_vars <- c("resale_price", "floor_area_sqm", "Remaining_lease",
           "max_floor_lvl", "Dist_CBD", "Dist_nearest_station")
-for (v in vars) {
+for (v in impt_vars) {
   print(ggplot(HDB_data, aes(x = .data[[v]])) + geom_histogram(bins = 40) + labs(x = v))
   print(ggplot(HDB_data, aes(y = .data[[v]])) + geom_boxplot() + labs(y = v))
 }
@@ -57,6 +57,9 @@ base_levels <- c('month_Jan',
                  'Nearest_primary_school_gender_CO.ED.SCHOOL',
                  'Nearest_GAI_primary_school_gender_CO.ED.SCHOOL',
                  'Nearest_G_secondary_school_gender_CO.ED.SCHOOL',
+                 'Nearest_G_primary_school_gender_CO.ED.SCHOOL',
+                 'Nearest_secondary_school_gender_CO.ED.SCHOOL',
+                 'Nearest_GAI_secondary_school_gender_CO.ED.SCHOOL',
                  'Nearest_hospital_ownership_Non.profit',
                  'Nearest_A_hospital_ownership_Non.profit'
                  ) ## dont need to drop MRT cos one flat can be close to 2 stations
@@ -74,11 +77,158 @@ HDB_data <- HDB_data %>%
 ##G_school: Government School 
 ## ADF: After_death facilities 
 ## GAI: Government Aided and independent schools
+HDB_factors <- HDB_data %>%
+  mutate(
+    month = case_when(
+      month_Feb == 1 ~ "Feb",
+      month_Mar == 1 ~ "Mar",
+      month_Apr == 1 ~ "Apr",
+      month_May == 1 ~ "May",
+      .default = "Jan"),
+    month = relevel(factor(month), ref = "Jan"),
+    
+    town = case_when(
+      town_BEDOK == 1 ~ "BEDOK",
+      town_BISHAN == 1 ~ "BISHAN",
+      town_BUKIT.BATOK == 1 ~ "BUKIT.BATOK",
+      town_BUKIT.MERAH == 1 ~ "BUKIT.MERAH",
+      town_BUKIT.PANJANG == 1 ~ "BUKIT.PANJANG",
+      town_BUKIT.TIMAH == 1 ~ "BUKIT.TIMAH",
+      town_CENTRAL.AREA == 1 ~ "CENTRAL.AREA",
+      town_CHOA.CHU.KANG == 1 ~ "CHOA.CHU.KANG",
+      town_CLEMENTI == 1 ~ "CLEMENTI",
+      town_GEYLANG == 1 ~ "GEYLANG",
+      town_HOUGANG == 1 ~ "HOUGANG",
+      town_JURONG.EAST == 1 ~ "JURONG.EAST",
+      town_JURONG.WEST == 1 ~ "JURONG.WEST",
+      town_KALLANG.WHAMPOA == 1 ~ "KALLANG.WHAMPOA",
+      town_MARINE.PARADE == 1 ~ "MARINE.PARADE",
+      town_PASIR.RIS == 1 ~ "PASIR.RIS",
+      town_PUNGGOL == 1 ~ "PUNGGOL",
+      town_QUEENSTOWN == 1 ~ "QUEENSTOWN",
+      town_SEMBAWANG == 1 ~ "SEMBAWANG",
+      town_SENGKANG == 1 ~ "SENGKANG",
+      town_SERANGOON == 1 ~ "SERANGOON",
+      town_TAMPINES == 1 ~ "TAMPINES",
+      town_TOA.PAYOH == 1 ~ "TOA.PAYOH",
+      town_WOODLANDS == 1 ~ "WOODLANDS",
+      town_YISHUN == 1 ~ "YISHUN",
+      .default = "ANG.MO.KIO"),
+    town = relevel(factor(town), ref = "ANG.MO.KIO"),
+    
+    storey_range = case_when(
+      storey_range_04.TO.06 == 1 ~ "04.TO.06",
+      storey_range_07.TO.09 == 1 ~ "07.TO.09",
+      storey_range_10.TO.12 == 1 ~ "10.TO.12",
+      storey_range_13.TO.15 == 1 ~ "13.TO.15",
+      storey_range_16.TO.18 == 1 ~ "16.TO.18",
+      storey_range_19.TO.21 == 1 ~ "19.TO.21",
+      storey_range_22.TO.24 == 1 ~ "22.TO.24",
+      storey_range_25.TO.27 == 1 ~ "25.TO.27",
+      storey_range_28.TO.30 == 1 ~ "28.TO.30",
+      storey_range_31.TO.33 == 1 ~ "31.TO.33",
+      storey_range_34.TO.36 == 1 ~ "34.TO.36",
+      storey_range_37.TO.48 == 1 ~ "37.TO.48",
+      .default = "01.TO.03"),
+    storey_range = relevel(factor(storey_range), ref = "01.TO.03"),
+    
+    flat_type = case_when(
+      flat_type_2.ROOM == 1 ~ "2.ROOM",
+      flat_type_3.ROOM == 1 ~ "3.ROOM",
+      flat_type_4.ROOM == 1 ~ "4.ROOM",
+      flat_type_5.ROOM == 1 ~ "5.ROOM",
+      flat_type_EXECUTIVE == 1 ~ "EXECUTIVE",
+      flat_type_MULTI.GENERATION == 1 ~ "MULTI.GENERATION",
+      .default = "1.ROOM"),
+    flat_type = relevel(factor(flat_type), ref = "1.ROOM"),
+    
+    flat_model = case_when(
+      flat_model_adjoined.flat == 1 ~ "adjoined.flat",
+      flat_model_apartment == 1 ~ "apartment",
+      flat_model_dbss == 1 ~ "dbss",
+      flat_model_improved == 1 ~ "improved",
+      flat_model_improved.maisonette == 1 ~ "improved.maisonette",
+      flat_model_maisonette == 1 ~ "maisonette",
+      flat_model_model.a == 1 ~ "model.a",
+      flat_model_model.a.maisonette == 1 ~ "model.a.maisonette",
+      flat_model_model.a2 == 1 ~ "model.a2",
+      flat_model_multi.generation == 1 ~ "multi.generation",
+      flat_model_new.generation == 1 ~ "new.generation",
+      flat_model_premium.apartment == 1 ~ "premium.apartment",
+      flat_model_premium.apartment.loft == 1 ~ "premium.apartment.loft",
+      flat_model_premium.maisonette == 1 ~ "premium.maisonette",
+      flat_model_simplified == 1 ~ "simplified",
+      flat_model_standard == 1 ~ "standard",
+      flat_model_terrace == 1 ~ "terrace",
+      flat_model_type.s1 == 1 ~ "type.s1",
+      flat_model_type.s2 == 1 ~ "type.s2",
+      .default = "2.room"),
+    flat_model = relevel(factor(flat_model), ref = "2.room"),
+    
+    Nearest_primary_school_gender = case_when(
+      Nearest_primary_school_gender_BOYS..SCHOOL  == 1 ~ "BOYS..SCHOOL",
+      Nearest_primary_school_gender_GIRLS..SCHOOL == 1 ~ "GIRLS..SCHOOL",
+      .default = "CO.ED.SCHOOL"),
+    Nearest_primary_school_gender = relevel(factor(Nearest_primary_school_gender), ref = "CO.ED.SCHOOL"),
+    
+    Nearest_GAI_primary_school_gender = case_when(
+      Nearest_GAI_primary_school_gender_BOYS..SCHOOL  == 1 ~ "BOYS..SCHOOL",
+      Nearest_GAI_primary_school_gender_GIRLS..SCHOOL == 1 ~ "GIRLS..SCHOOL",
+      .default = "CO.ED.SCHOOL"),
+    Nearest_GAI_primary_school_gender = relevel(factor(Nearest_GAI_primary_school_gender), ref = "CO.ED.SCHOOL"),
+    
+    Nearest_G_primary_school_gender = case_when(
+      Nearest_G_primary_school_gender_GIRLS..SCHOOL == 1 ~ "GIRLS..SCHOOL",
+      .default = "CO.ED.SCHOOL"),
+    Nearest_G_primary_school_gender = relevel(factor(Nearest_G_primary_school_gender), ref = "CO.ED.SCHOOL"),
+    
+    Nearest_secondary_school_gender = case_when(
+      Nearest_secondary_school_gender_BOYS..SCHOOL  == 1 ~ "BOYS..SCHOOL",
+      Nearest_secondary_school_gender_GIRLS..SCHOOL == 1 ~ "GIRLS..SCHOOL",
+      .default = "CO.ED.SCHOOL"),
+    Nearest_secondary_school_gender = relevel(factor(Nearest_secondary_school_gender), ref = "CO.ED.SCHOOL"),
+    
+    Nearest_GAI_secondary_school_gender = case_when(
+      Nearest_GAI_secondary_school_gender_BOYS..SCHOOL  == 1 ~ "BOYS..SCHOOL",
+      Nearest_GAI_secondary_school_gender_GIRLS..SCHOOL == 1 ~ "GIRLS..SCHOOL",
+      .default = "CO.ED.SCHOOL"),
+    Nearest_GAI_secondary_school_gender = relevel(factor(Nearest_GAI_secondary_school_gender), ref = "CO.ED.SCHOOL"),
+    
+    Nearest_G_secondary_school_gender = case_when(
+      Nearest_G_secondary_school_gender_BOYS..SCHOOL  == 1 ~ "BOYS..SCHOOL",
+      Nearest_G_secondary_school_gender_GIRLS..SCHOOL == 1 ~ "GIRLS..SCHOOL",
+      .default = "CO.ED.SCHOOL"),
+    Nearest_G_secondary_school_gender = relevel(factor(Nearest_G_secondary_school_gender), ref = "CO.ED.SCHOOL"),
+    
+    Nearest_hospital_ownership = case_when(
+      Nearest_hospital_ownership_Private == 1 ~ "Private",
+      Nearest_hospital_ownership_Public  == 1 ~ "Public",
+      .default = "Non.profit"),
+    Nearest_hospital_ownership = relevel(factor(Nearest_hospital_ownership), ref = "Non.profit"),
+    
+    Nearest_A_hospital_ownership = case_when(
+      Nearest_A_hospital_ownership_Private == 1 ~ "Private",
+      Nearest_A_hospital_ownership_Public  == 1 ~ "Public",
+      .default = "Non.profit"),
+    Nearest_A_hospital_ownership = relevel(factor(Nearest_A_hospital_ownership), ref = "Non.profit")) %>%
+ 
+  select(-starts_with(c("month_", "town_", "storey_range_", "flat_type_", "flat_model_",
+                        "Nearest_primary_school_gender_", "Nearest_GAI_primary_school_gender_",
+                        "Nearest_G_primary_school_gender_", "Nearest_secondary_school_gender_",
+                        "Nearest_GAI_secondary_school_gender_", "Nearest_G_secondary_school_gender_",
+                        "Nearest_hospital_ownership_", "Nearest_A_hospital_ownership_"),
+                      ignore.case = FALSE))
 
+## for non knn and PCR
+set.seed(678349)
+nrow(HDB_factors) #nrows = 6000
+ntrain = 4200#set size of the training sample
+tr_factors = sample(1:nrow(HDB_factors),ntrain)  
+train_factors = HDB_factors[tr_factors,]  
+test_factors = HDB_factors[-tr_factors,] 
+summary(HDB_factors)sh
 
-# A4. Train/test split
-# set.seed() before splitting; 70/30
-# Objects other scripts rely on: train, test
+# for knn and PCR
 set.seed(678349)
 nrow(HDB_data) #nrows = 6000
 ntrain = 4200#set size of the training sample
