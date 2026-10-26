@@ -226,8 +226,8 @@ ntrain = 4200#set size of the training sample
 tr_factors = sample(1:nrow(HDB_factors),ntrain)  
 train_factors = HDB_factors[tr_factors,]  
 test_factors = HDB_factors[-tr_factors,] 
-summary(HDB_factors)sh
-
+summary(HDB_factors)
+head(HDB_factors)
 # for knn and PCR
 set.seed(678349)
 nrow(HDB_data) #nrows = 6000
