@@ -228,6 +228,16 @@ train_factors = HDB_factors[tr_factors,]
 test_factors = HDB_factors[-tr_factors,] 
 summary(HDB_factors)
 head(HDB_factors)
+
+for(col in colnames(test_factors)) {
+  if(is.factor(test_factors[[col]])) {
+    train_levels <- levels(train_factors[[col]])
+    test_factors <- test_factors[test_factors[[col]] %in% train_levels, ]
+  }
+}
+test_factors <- droplevels(test_factors)
+train_factors <- droplevels(train_factors)
+ 
 # for knn and PCR
 set.seed(678349)
 nrow(HDB_data) #nrows = 6000
