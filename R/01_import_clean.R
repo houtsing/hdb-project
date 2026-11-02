@@ -236,7 +236,6 @@ for(col in colnames(test_factors)) {
     test_factors[[col]] <- factor(test_factors[[col]], levels = train_levels)
   }
 }
-test_factors <- droplevels(test_factors)
  
 # for knn and PCR
 set.seed(678349)
