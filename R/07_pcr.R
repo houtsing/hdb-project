@@ -6,8 +6,8 @@ set.seed(678349)
 nrow(HDB_data) #nrows = 6000
 ntrain = 4200#set size of the training sample
 tr = sample(1:nrow(HDB_data),ntrain)  
-train = HDB_data[tr,]  
-test = HDB_data[-tr,] 
+train = train_pcr 
+test = test_pcr
 # PCA on standardised numeric predictors (scree plot)
 data = HDB_data
 sum(is.na(data))
@@ -25,7 +25,7 @@ head(data)
 set.seed(678349)
 pcr.fit2 = pcr(resale_price ~. ,data = train, scale=TRUE, validation="CV")
 validationplot(pcr.fit2, val.type = "MSEP", legendpos = "topright")
-MSEPtable=MSEP(pcr.fit2,estimate = "adjCV",ncomp=1:145)
+MSEPtable=MSEP(pcr.fit2,estimate = "adjCV",ncomp=1:142)
 best = which.min(MSEPtable$val)
 
 pcr.pred=predict(pcr.fit2, newdata= test, ncomp= best)
