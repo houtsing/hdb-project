@@ -8,13 +8,16 @@ library(ISLR)
 library(ROCR)
 library(kknn)
 
-knnpred = kknn(resale_price~storey_range + Remaining_lease + floor_area_sqm + town 
-               + max_floor_lvl + Dist_nearest_station + flat_model + unique_no_mrt_1km
-               + Dist_CBD + Dist_nearest_GAI_jc + Dist_nearest_CC,train_factors,test_factors,k=20,kernel="rectangular")
 df.loocv=train.kknn(resale_price~storey_range + Remaining_lease + floor_area_sqm + town 
                     + max_floor_lvl + Dist_nearest_station + flat_model + unique_no_mrt_1km
                     + Dist_CBD + Dist_nearest_GAI_jc + Dist_nearest_CC,data = train_factors,kmax=100,kernel="rectangular")
+kbest=df.loocv$best.parameters$k
 
+knnreg= kknn(resale_price~storey_range + Remaining_lease + floor_area_sqm + town 
+             + max_floor_lvl + Dist_nearest_station + flat_model + unique_no_mrt_1km
+             + Dist_CBD + Dist_nearest_GAI_jc + Dist_nearest_CC,train_factors,test_factors,
+             k=kbest,kernel="rectangular")
+knnrmse=(mean((test_factors$resale_price-knnreg$fitted.values)^2))^0.5
 # C4. Regression tree
 # Grow large tree, prune by CV, record size and top splits
 library(tree)
@@ -31,6 +34,8 @@ for(col in colnames(test_factors)) {
 }
 test_factors = droplevels(test_factors)
 train_factors = droplevels(train_factors)
+
+
 
 temp = tree(resale_price ~ storey_range + Remaining_lease + floor_area_sqm + town 
             + max_floor_lvl + Dist_nearest_station + flat_model + unique_no_mrt_1km
@@ -50,6 +55,7 @@ regfit=lm(formula=resale_price~ storey_range + Remaining_lease + floor_area_sqm 
           + Dist_CBD + Dist_nearest_GAI_jc + Dist_nearest_CC,data=train_factors)
 predlm=predict.lm(regfit, newdata=test_factors)
 RMSE_tree = sqrt(mean((test_factors$resale_price-predlm)^2))
+<<<<<<< HEAD
 
 #RMSE_tree is 51.24.
 
@@ -67,3 +73,5 @@ treefit=predict(best.tree,newdata=test_factors,type="vector")
 RMSE_rpart = sqrt(mean((test_factors$resale_price-treefit)^2))
 
 #RMSE_rpart is 55.58.
+=======
+>>>>>>> 6701957e97cbe03d098fbaa9f60826f5c0ce0891
