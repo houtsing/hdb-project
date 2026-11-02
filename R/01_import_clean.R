@@ -4,6 +4,7 @@
 # Details: Week10_tasks_explained.md
 library(readxl) #install.packages('readxl')
 library(dplyr)
+select <- dplyr::select
 library(ggplot2)
 
 # A1. Import data
