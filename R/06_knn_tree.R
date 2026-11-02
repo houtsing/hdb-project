@@ -17,7 +17,7 @@ knnreg= kknn(resale_price~storey_range + Remaining_lease + floor_area_sqm + town
              + max_floor_lvl + Dist_nearest_station + flat_model + unique_no_mrt_1km
              + Dist_CBD + Dist_nearest_GAI_jc + Dist_nearest_CC,train_factors,test_factors,
              k=kbest,kernel="rectangular")
-knnmse=mean((test_factors$resale_price-knnreg$fitted.values)^2)
+knnrmse=(mean((test_factors$resale_price-knnreg$fitted.values)^2))^0.5
 # C4. Regression tree
 # Grow large tree, prune by CV, record size and top splits
 library(tree)
@@ -55,4 +55,3 @@ regfit=lm(formula=resale_price~ storey_range + Remaining_lease + floor_area_sqm 
           + Dist_CBD + Dist_nearest_GAI_jc + Dist_nearest_CC,data=train_factors)
 predlm=predict.lm(regfit, newdata=test_factors)
 RMSE_tree = sqrt(mean((test_factors$resale_price-predlm)^2))
-
