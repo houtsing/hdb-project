@@ -51,3 +51,19 @@ regfit=lm(formula=resale_price~ storey_range + Remaining_lease + floor_area_sqm 
 predlm=predict.lm(regfit, newdata=test_factors)
 RMSE_tree = sqrt(mean((test_factors$resale_price-predlm)^2))
 
+#RMSE_tree is 51.24.
+
+big.tree = rpart(resale_price~storey_range + Remaining_lease + floor_area_sqm + town 
+                 + max_floor_lvl + Dist_nearest_station + flat_model + unique_no_mrt_1km
+                 + Dist_CBD + Dist_nearest_GAI_jc + Dist_nearest_CC,
+                 method="anova",data=train_factors, minsplit=5,cp=.0005)
+length(unique(big.tree$where))
+plotcp(big.tree)
+bestcp=big.tree$cptable[which.min(big.tree$cptable[,"xerror"]),"CP"]
+best.tree = prune(big.tree,cp=bestcp)
+plot(best.tree,uniform=TRUE)
+text(best.tree,digits=4,use.n=TRUE,fancy=FALSE,bg='lightblue')
+treefit=predict(best.tree,newdata=test_factors,type="vector") 
+RMSE_rpart = sqrt(mean((test_factors$resale_price-treefit)^2))
+
+#RMSE_rpart is 55.58.
