@@ -1,9 +1,7 @@
 # 01_import_clean.R
-# Owner: A   Tasks: A1-A4 (Week 10)
-# Creates the cleaned data and the train/test split that every later script uses.
-# Details: Week10_tasks_explained.md
 library(readxl) #install.packages('readxl')
 library(dplyr)
+## prevent MASS package from interfering with select()
 select <- dplyr::select
 library(ggplot2)
 
@@ -230,14 +228,14 @@ test_factors = HDB_factors[-tr_factors,]
 summary(HDB_factors)
 head(HDB_factors)
 
+train_factors <- droplevels(train_factors) #remove unused 
 for(col in colnames(test_factors)) {
   if(is.factor(test_factors[[col]])) {
     train_levels <- levels(train_factors[[col]])
     test_factors <- test_factors[test_factors[[col]] %in% train_levels, ]
+    test_factors[[col]] <- factor(test_factors[[col]], levels = train_levels)
   }
 }
-test_factors <- droplevels(test_factors)
-train_factors <- droplevels(train_factors)
  
 # for knn and PCR
 set.seed(678349)
