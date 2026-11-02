@@ -27,10 +27,12 @@ pcr.fit2 = pcr(resale_price ~. ,data = train, scale=TRUE, validation="CV")
 validationplot(pcr.fit2, val.type = "MSEP", legendpos = "topright")
 MSEPtable=MSEP(pcr.fit2,estimate = "adjCV",ncomp=1:142)
 best = which.min(MSEPtable$val)
-
-pcr.pred=predict(pcr.fit2, newdata= test, ncomp= best)
+pcr.pred=predict(pcr.fit2, newdata= test, ncomp= best - 1)
 RMSE2 = sqrt(mean((test$resale_price - pcr.pred)^2))
+
+#RMSE2 is 47.60.
 
 histav=lm(resale_price~1, data=train)
 predlm=predict.lm(histav, newdata=test)
 RMSE_histav = sqrt(mean((test$resale_price-predlm)^2))
+#RMSE_histav is 161.72.
