@@ -245,6 +245,8 @@ ntrain = 4200#set size of the training sample
 tr = sample(1:nrow(HDB_data),ntrain)  
 train = HDB_data[tr,]  
 test = HDB_data[-tr,] 
+## remove columns where there is only 1 non_zero value out of all rows
+## prevents zerodivision error during scaling in PCR
 rare_cols <- train %>%
   select(where(~ sum(.x != 0) <= 1)) %>%
   names()
