@@ -228,7 +228,7 @@ test_factors = HDB_factors[-tr_factors,]
 summary(HDB_factors)
 head(HDB_factors)
 
-train_factors <- droplevels(train_factors)
+train_factors <- droplevels(train_factors) #remove unused 
 for(col in colnames(test_factors)) {
   if(is.factor(test_factors[[col]])) {
     train_levels <- levels(train_factors[[col]])

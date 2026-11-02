@@ -35,6 +35,8 @@ for(col in colnames(test_factors)) {
 test_factors = droplevels(test_factors)
 train_factors = droplevels(train_factors)
 
+
+
 temp = tree(resale_price ~ storey_range + Remaining_lease + floor_area_sqm + town 
             + max_floor_lvl + Dist_nearest_station + flat_model + unique_no_mrt_1km
             + Dist_CBD + Dist_nearest_GAI_jc + Dist_nearest_CC, data = train_factors,
