@@ -26,4 +26,9 @@ hdb.tree=prune.tree(temp,best= bestcp)
 plot(hdb.tree,type="uniform")
 text(hdb.tree,col="blue",label=c("yval"),cex=.8)
 hdb.fit = predict(hdb.tree,newdata= test_factors)
+regfit=lm(formula=resale_price~ storey_range + Remaining_lease + floor_area_sqm + town 
+          + max_floor_lvl + Dist_nearest_station + flat_model + unique_no_mrt_1km
+          + Dist_CBD + Dist_nearest_GAI_jc + Dist_nearest_CC,data=train_factors)
+predlm=predict.lm(regfit, newdata=test_factors)
+RMSE_tree = sqrt(mean((test_factors$resale_price-predlm)^2))
 
