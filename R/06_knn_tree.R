@@ -8,6 +8,7 @@ library(ISLR)
 library(ROCR)
 library(kknn)
 
+set.seed(678349)
 df.loocv=train.kknn(resale_price~storey_range + Remaining_lease + floor_area_sqm + town 
                     + max_floor_lvl + Dist_nearest_station + flat_model + unique_no_mrt_1km
                     + Dist_CBD + Dist_nearest_GAI_jc + Dist_nearest_CC,data = train_factors,kmax=100,kernel="rectangular")
@@ -19,7 +20,7 @@ knnreg= kknn(resale_price~storey_range + Remaining_lease + floor_area_sqm + town
              k=kbest,kernel="rectangular")
 knnrmse=(mean((test_factors$resale_price-knnreg$fitted.values)^2))^0.5
 
-#knnrmse is 59.59.
+#knnrmse is 59.49.
 
 # C4. Regression tree
 # Grow large tree, prune by CV, record size and top splits
@@ -28,6 +29,8 @@ library(MASS)
 library(rpart)
 library(ROCR)
 df = HDB_data
+
+set.seed(678349)
 
 temp = tree(resale_price ~ storey_range + Remaining_lease + floor_area_sqm + town 
             + max_floor_lvl + Dist_nearest_station + flat_model + unique_no_mrt_1km
@@ -40,16 +43,13 @@ cv.hdb = cv.tree(temp, , prune.tree)
 bestcp = cv.hdb$size[max(which(cv.hdb$dev == min(cv.hdb$dev)))]
 hdb.tree=prune.tree(temp,best= bestcp)
 plot(hdb.tree,type="uniform")
-text(hdb.tree,col="blue",label=c("yval"),cex=.8)
+text(hdb.tree,col="black",label=c("yval"),cex=.8)
 hdb.fit = predict(hdb.tree,newdata= test_factors)
-regfit=lm(formula=resale_price~ storey_range + Remaining_lease + floor_area_sqm + town 
-          + max_floor_lvl + Dist_nearest_station + flat_model + unique_no_mrt_1km
-          + Dist_CBD + Dist_nearest_GAI_jc + Dist_nearest_CC,data=train_factors)
-predlm=predict.lm(regfit, newdata=test_factors)
-RMSE_tree = sqrt(mean((test_factors$resale_price-predlm)^2))
+treefit=predict(hdb.tree,newdata=test_factors,type="vector") #prediction on test data
+RMSE_tree = sqrt(mean((test_factors$resale_price-treefit)^2))
 
-#RMSE_tree is 51.24.
-
+#RMSE_tree is 79.25.
+set.seed(678349)
 big.tree = rpart(resale_price~storey_range + Remaining_lease + floor_area_sqm + town 
                  + max_floor_lvl + Dist_nearest_station + flat_model + unique_no_mrt_1km
                  + Dist_CBD + Dist_nearest_GAI_jc + Dist_nearest_CC,
@@ -60,7 +60,7 @@ bestcp=big.tree$cptable[which.min(big.tree$cptable[,"xerror"]),"CP"]
 best.tree = prune(big.tree,cp=bestcp)
 plot(best.tree,uniform=TRUE)
 text(best.tree,digits=4,use.n=TRUE,fancy=FALSE,bg='lightblue')
-treefit=predict(best.tree,newdata=test_factors,type="vector") 
-RMSE_rpart = sqrt(mean((test_factors$resale_price-treefit)^2))
+treefit2=predict(best.tree,newdata=test_factors,type="vector") 
+RMSE_rpart = sqrt(mean((test_factors$resale_price-treefit2)^2))
 
-#RMSE_rpart is 55.58.
+#RMSE_rpart is 55.43.
