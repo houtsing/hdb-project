@@ -18,6 +18,9 @@ knnreg= kknn(resale_price~storey_range + Remaining_lease + floor_area_sqm + town
              + Dist_CBD + Dist_nearest_GAI_jc + Dist_nearest_CC,train_factors,test_factors,
              k=kbest,kernel="rectangular")
 knnrmse=(mean((test_factors$resale_price-knnreg$fitted.values)^2))^0.5
+
+#knnrmse is 59.59.
+
 # C4. Regression tree
 # Grow large tree, prune by CV, record size and top splits
 library(tree)
@@ -25,17 +28,6 @@ library(MASS)
 library(rpart)
 library(ROCR)
 df = HDB_data
-
-for(col in colnames(test_factors)) {
-  if(is.factor(test_factors[[col]])) {
-    train_levels = levels(train_factors[[col]])
-    test_factors = test_factors[test_factors[[col]] %in% train_levels, ]
-  }
-}
-test_factors = droplevels(test_factors)
-train_factors = droplevels(train_factors)
-
-
 
 temp = tree(resale_price ~ storey_range + Remaining_lease + floor_area_sqm + town 
             + max_floor_lvl + Dist_nearest_station + flat_model + unique_no_mrt_1km
