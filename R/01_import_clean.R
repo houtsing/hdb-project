@@ -4,6 +4,7 @@
 # Details: Week10_tasks_explained.md
 library(readxl) #install.packages('readxl')
 library(dplyr)
+select <- dplyr::select
 library(ggplot2)
 
 # A1. Import data
@@ -219,7 +220,7 @@ HDB_factors <- HDB_data %>%
                         "Nearest_hospital_ownership_", "Nearest_A_hospital_ownership_"),
                       ignore.case = FALSE))
 
-## for non knn and PCR
+## for non knn 
 set.seed(678349)
 nrow(HDB_factors) #nrows = 6000
 ntrain = 4200#set size of the training sample
@@ -245,5 +246,12 @@ ntrain = 4200#set size of the training sample
 tr = sample(1:nrow(HDB_data),ntrain)  
 train = HDB_data[tr,]  
 test = HDB_data[-tr,] 
+## remove columns where there is only 1 non_zero value out of all rows
+## prevents zerodivision error during scaling in PCR
+rare_cols <- train %>%
+  select(where(~ sum(.x != 0) <= 1)) %>%
+  names()
+train_pcr <- train %>% select(-all_of(rare_cols))
+test_pcr  <- test  %>% select(-all_of(rare_cols))
 
 summary(HDB_data)
