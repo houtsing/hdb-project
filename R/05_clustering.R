@@ -11,7 +11,7 @@ disc2 = c("Remaining_lease", "floor_area_sqm", "max_floor_lvl", "resale_price")
 data2 = df[,(names(df) %in% disc2)] 
 grp3b = kmeans(scale(data2), centers = 2, nstart = 10)
 plot(df$floor_area_sqm, df$resale_price, main = "K = 2", xlab="floor area", ylab="resale price", type="n")
-text(df$floor_area_sqm, df$resale_price, labels=df$flat_type, col = rainbow(2)[grp3b$cluster])
+text(df$floor_area_sqm, df$resale_price, labels=df$town, col = rainbow(2)[grp3b$cluster])
 # Hierarchical clustering as a cross-check (dendrogram)
 set.seed(678349) 
 sd.data2 = scale(data2) #standardize the continuous only data extracted earlier
