@@ -13,6 +13,10 @@ df.loocv=train.kknn(resale_price~storey_range + Remaining_lease + floor_area_sqm
                     + max_floor_lvl + Dist_nearest_station + flat_model + unique_no_mrt_1km
                     + Dist_CBD + Dist_nearest_GAI_jc + Dist_nearest_CC,data = train_factors,kmax=100,kernel="rectangular")
 kbest=df.loocv$best.parameters$k
+plot(1:100, sqrt(df.loocv$MEAN.SQU[,1]), type = "l",
+     xlab = "k (number of neighbours)", ylab = "LOOCV RMSE ($000s)",
+     main = "kNN: LOOCV error by k")
+points(kbest, sqrt(df.loocv$MEAN.SQU[kbest,1]), col = "red", pch = 19)
 
 knnreg= kknn(resale_price~storey_range + Remaining_lease + floor_area_sqm + town 
              + max_floor_lvl + Dist_nearest_station + flat_model + unique_no_mrt_1km

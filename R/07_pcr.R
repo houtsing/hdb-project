@@ -17,7 +17,7 @@ prall = prcomp(data, scale = TRUE)
 biplot(prall)
 prall.s = summary(prall)
 scree = prall.s$importance[2,] #only proportion of variance
-plot(scree, main = "Bond Yields Scree Plot", xlab = "Principal Component", 
+plot(scree, main = "Resale Prices Scree Plot", xlab = "Principal Component", 
      ylab = "Proportion of Variance Explained", ylim = c(0,1), type = 'b', cex = .8)
 scree
 
