@@ -1,7 +1,3 @@
-# 05_clustering.R
-# Owner: A   Task: A6 (Week 11)
-# Unsupervised: price is NOT used to form clusters. Details: Week11_tasks_explained.md
-
 # Standardise location and amenity variables
 df = HDB_factors
 sapply(df, class)
