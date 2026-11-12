@@ -1,4 +1,3 @@
-# 01_import_clean.R
 library(readxl) #install.packages('readxl')
 library(dplyr)
 ## prevent MASS package from interfering with select()

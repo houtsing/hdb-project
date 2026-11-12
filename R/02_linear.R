@@ -1,15 +1,5 @@
-# 04_linear.R
-# Owner: B   Tasks: B4-B6 (Week 11)
-# Training set only. Details: Week11_tasks_explained.md
-
-# B4. Benchmark multiple linear regression (core predictors)
-# Record: coefficients, adjusted R-squared, CV RMSE
-
-# B5. Amenities test (core + amenity block), compare CV RMSE
-
-# B6. Cluster label in place of town dummies (needs 05_clustering.R output)
 df = HDB_factors
-# 1. Clean the test set rows of any unseen factor categories
+# Clean the test set rows of any unseen factor categories
 # best 11 predictors in lm1
 lm1 = lm(resale_price ~ storey_range + Remaining_lease + floor_area_sqm + town 
          + max_floor_lvl + Dist_nearest_station + flat_model + unique_no_mrt_1km

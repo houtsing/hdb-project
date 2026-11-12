@@ -1,9 +1,3 @@
-# 06_knn_tree.R
-# Owner: C   Tasks: C3-C4 (Week 11)
-# Training set only. Details: Week11_tasks_explained.md
-
-# C3. kNN regression
-# Standardise predictors using training-set means/SDs; choose k by CV
 library(ISLR)
 library(ROCR)
 library(kknn)
@@ -26,8 +20,7 @@ knnrmse=(mean((test_factors$resale_price-knnreg$fitted.values)^2))^0.5
 
 #knnrmse is 59.49.
 
-# C4. Regression tree
-# Grow large tree, prune by CV, record size and top splits
+#Regression tree
 library(tree)
 library(MASS)
 library(rpart)
