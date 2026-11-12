@@ -3,7 +3,7 @@ df = HDB_factors
 sapply(df, class)
 # K-means: set.seed(), elbow plot to choose k
 set.seed(678349)
-disc2 = c("Remaining_lease", "floor_area_sqm", "max_floor_lvl", "Dist_nearest_GHawker ",
+disc2 = c("Remaining_lease", "floor_area_sqm", "max_floor_lvl", "Dist_nearest_GHawker",
           "Dist_nearest_mall", "Dist_nearest_beach", "Dist_nearest_waterbody",
           "Dist_nearest_CC","Dist_nearest_station", "Dist_nearest_primary_school",
           "Dist_nearest_hospital", "Dist_CBD", "Dist_nearest_ADF")
