@@ -1,19 +1,16 @@
-library(readxl) #install.packages('readxl')
+library(readxl)
 library(dplyr)
 ## prevent MASS package from interfering with select()
 select <- dplyr::select
 library(ggplot2)
 
-# A1. Import data
-# Read data/HDB_data_2021_sample.xlsx (relative path, not /Users/...)
 HDB_data <- read_excel("data/HDB_data_2021_sample.xlsx")
 dim(HDB_data)
 str(HDB_data) ## all data confirmed to be num
 head(HDB_data)
 
-# A2. Data checks
-# Missing values, impossible values, outliers
-# Rescale resale_price to $000s
+# missing values, impossible values, outliers
+# rescale resale_price to $000s
 sum(is.na(HDB_data)) #check for empty values; no empty values present
 #drop columns where values are the same for the entire column (eg, year, or cols with all 0)
 HDB_data <- HDB_data %>% select(-where(~ n_distinct(.x) == 1)) 
@@ -44,9 +41,7 @@ for (v in impt_vars) {
 ## can be seen from the box plot. Data checks out and it should be kept within the
 ## data set.
 
-# A3. Fix dummy coding
-# Drop one base level per dummy group (month, town, flat_type, flat_model, storey)
-# Use town OR postal_2digits, not both
+# drop one base level per dummy group (month, town, flat_type, flat_model, storey)
 base_levels <- c('month_Jan',
                  'town_ANG.MO.KIO', 
                  'storey_range_01.TO.03',

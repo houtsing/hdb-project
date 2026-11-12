@@ -3,12 +3,6 @@ df = HDB_factors
 sapply(df, class)
 # K-means: set.seed(), elbow plot to choose k
 set.seed(678349)
-# disc2 = c("Remaining_lease", "floor_area_sqm", "max_floor_lvl")
-# data2 = df[,(names(df) %in% disc2)] 
-# grp3b = kmeans(scale(data2), centers = 3, nstart = 10)
-# plot(df$floor_area_sqm, df$resale_price, main = "K = 3", xlab="floor area", ylab="resale price", type="n")
-# text(df$floor_area_sqm, df$resale_price, labels=df$town, col = rainbow(3)[grp3b$cluster])
-
 disc2 = c("Remaining_lease", "floor_area_sqm", "max_floor_lvl", "Dist_nearest_GHawker ",
           "Dist_nearest_mall", "Dist_nearest_beach", "Dist_nearest_waterbody",
           "Dist_nearest_CC","Dist_nearest_station", "Dist_nearest_primary_school",

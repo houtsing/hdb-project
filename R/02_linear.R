@@ -1,5 +1,3 @@
-df = HDB_factors
-# Clean the test set rows of any unseen factor categories
 # best 11 predictors in lm1
 lm1 = lm(resale_price ~ storey_range + Remaining_lease + floor_area_sqm + town 
          + max_floor_lvl + Dist_nearest_station + flat_model + unique_no_mrt_1km

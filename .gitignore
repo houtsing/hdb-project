@@ -9,3 +9,6 @@
 # OS / editor clutter
 .DS_Store
 ~$*
+
+# R plot output
+Rplots.pdf
